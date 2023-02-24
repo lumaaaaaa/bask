@@ -17,12 +17,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const (
+	MAX_REQUESTS = 6 // Bing server-side limit
+)
+
 var (
 	client                = &http.Client{}
 	dialer                = &websocket.Dialer{}
 	conversationId        string
 	clientId              string
 	conversationSignature string
+
+	requestCount = 0
 )
 
 func createChat() (CreateResponse, error) {
@@ -30,7 +36,7 @@ func createChat() (CreateResponse, error) {
 	if err != nil {
 		return CreateResponse{}, err
 	}
-	
+
 	request, err := http.NewRequest("GET", "https://www.bing.com/turing/conversation/create", nil)
 	if err != nil {
 		return CreateResponse{}, err
@@ -96,7 +102,9 @@ func search(query string) {
 
 	c, _, err := dialer.Dial(u.String(), nil)
 	if err != nil {
-		log.Fatal("dial:", err)
+		fmt.Println()
+		fmt.Println("Error: The server refused the connection.")
+		os.Exit(2)
 	}
 	defer c.Close()
 
@@ -137,6 +145,8 @@ func search(query string) {
 		return
 	}
 
+	requestCount++
+
 	previousMessage := ""
 	next := false
 
@@ -153,6 +163,7 @@ func search(query string) {
 		var bingMessage BingMessage
 		err = json.Unmarshal([]byte(msg), &bingMessage)
 		if err != nil {
+			fmt.Println(string(response))
 			log.Fatal(err)
 			return
 		}
@@ -165,6 +176,7 @@ func search(query string) {
 	if next {
 		c.Close()
 
+		fmt.Println()
 		fmt.Print("> ")
 
 		in := bufio.NewReader(os.Stdin)
@@ -209,7 +221,7 @@ func handleMessage(previousMessage string, response []byte, bingMessage BingMess
 		}
 		//fmt.Println(bingMessage.Arguments[0].Messages[0].Text)
 	case 2:
-		fmt.Println()
+		//fmt.Println()
 		messages := strings.Split(string(response), "\x1e")
 		if len(messages) > 1 {
 			// I'll do this better in the future I promise! -> make the loop interpret these messages instead
@@ -218,6 +230,7 @@ func handleMessage(previousMessage string, response []byte, bingMessage BingMess
 				var type2Message BingMessageType2
 				err := json.Unmarshal([]byte(m), &type2Message)
 				if err != nil {
+					fmt.Println(m)
 					log.Fatal(err)
 				}
 
@@ -237,6 +250,7 @@ func handleMessage(previousMessage string, response []byte, bingMessage BingMess
 			var type2Message BingMessageType2
 			err := json.Unmarshal([]byte(messages[0]), &type2Message)
 			if err != nil {
+				fmt.Println(messages[0])
 				log.Fatal(err)
 			}
 
@@ -246,7 +260,8 @@ func handleMessage(previousMessage string, response []byte, bingMessage BingMess
 	case 6:
 		// ignore
 	case 7:
-		os.Exit(0)
+		fmt.Println(string(response))
+		//os.Exit(0)
 	default:
 		fmt.Println(string(response))
 		os.Exit(1)
@@ -262,7 +277,9 @@ func continueConversation(query string, formattedTime string) {
 
 	c, _, err := dialer.Dial(u.String(), nil)
 	if err != nil {
-		log.Fatal("dial:", err)
+		fmt.Println()
+		fmt.Println("Error: The server refused the connection.")
+		os.Exit(2)
 	}
 	defer c.Close()
 
@@ -297,6 +314,8 @@ func continueConversation(query string, formattedTime string) {
 		return
 	}
 
+	requestCount++
+
 	previousMessage := ""
 	next := false
 
@@ -325,6 +344,11 @@ func continueConversation(query string, formattedTime string) {
 	if next {
 		c.Close()
 
+		if requestCount == MAX_REQUESTS {
+			os.Exit(0)
+		}
+
+		fmt.Println()
 		fmt.Print("> ")
 
 		in := bufio.NewReader(os.Stdin)
