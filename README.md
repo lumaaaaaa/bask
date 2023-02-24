@@ -15,7 +15,7 @@
 ---
 ## Demo
 
-<img alt="Enola demo" src="https://misato.pw/bask/examples/kanzi.gif" width="600" />
+<img alt="Bask demo" src="https://misato.pw/bask/examples/kanzi.gif"/>
 
 ---
 
