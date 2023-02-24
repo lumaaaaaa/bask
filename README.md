@@ -15,7 +15,9 @@
 ---
 ## Demo
 
-<img alt="Bask demo" src="https://misato.pw/bask/examples/kanzi.gif"/>
+<div align="center">
+    <img alt="Bask demo" src="https://misato.pw/bask/examples/kanzi.gif"/>
+</div>
 
 ---
 
