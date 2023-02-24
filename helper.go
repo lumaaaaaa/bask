@@ -7,7 +7,7 @@ import (
 )
 
 func getCookie() (string, error) {
-	file, err := os.ReadFile("$GOPATH/bin/bask_data/cookie.json")
+	file, err := os.ReadFile(gopath + "/bin/bask_data/cookie.json")
 	if err != nil {
 		return "", err
 	}
@@ -22,7 +22,7 @@ func getCookie() (string, error) {
 }
 
 func cookieExists() bool {
-	if _, err := os.Stat("$GOPATH/bin/bask_data/cookie.json"); err == nil {
+	if _, err := os.Stat(gopath + "/bin/bask_data/cookie.json"); err == nil {
 		return true
 	} else {
 		return false
@@ -30,6 +30,13 @@ func cookieExists() bool {
 }
 
 func setCookie(cookie string) {
+	if _, err := os.Stat(gopath + "/bin/bask_data"); err != nil {
+		err = os.Mkdir(gopath+"/bin/bask_data", os.ModePerm)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	var cookieData CookieData
 	cookieData.Cookie = cookie
 	json, err := json.Marshal(cookieData)
@@ -37,7 +44,7 @@ func setCookie(cookie string) {
 		log.Fatal(err)
 	}
 
-	err = os.WriteFile("$GOPATH/bin/bask_data/cookie.json", json, 0644)
+	err = os.WriteFile(gopath+"/bin/bask_data/cookie.json", json, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+var (
+	gopath = os.Getenv("GOPATH")
+)
+
 func printHelp() {
 	fmt.Println("bAsk - bing chat for the CLI")
 	fmt.Println()
