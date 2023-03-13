@@ -7,8 +7,8 @@ type CreateResponse struct {
 	ClientID              string `json:"clientId"`
 	ConversationSignature string `json:"conversationSignature"`
 	Result                struct {
-		Value   string      `json:"value"`
-		Message interface{} `json:"message"`
+		Value   string `json:"value"`
+		Message string `json:"message"`
 	} `json:"result"`
 }
 

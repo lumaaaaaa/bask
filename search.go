@@ -84,8 +84,7 @@ func createChat() (CreateResponse, error) {
 	case "Success":
 		return createResponse, nil
 	default:
-		fmt.Println(string(body))
-		return CreateResponse{}, errors.New("failed to create a new conversation")
+		return CreateResponse{}, errors.New(createResponse.Result.Value + ": " + createResponse.Result.Message)
 	}
 }
 
