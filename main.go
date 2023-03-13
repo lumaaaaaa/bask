@@ -46,7 +46,12 @@ func main() {
 		if len(args) < 2 {
 			fmt.Println("bAsk - No cookie provided!")
 		} else {
-			setCookie(args[1])
+			if gopath != "" {
+				setCookie(args[1])
+			} else {
+				fmt.Println("bAsk - GOPATH environment variable is undefined!")
+				fmt.Println("Please verify your GOPATH environment variable is set properly.")
+			}
 		}
 	case "-h":
 		printHelp()
