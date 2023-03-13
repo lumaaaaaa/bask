@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	MAX_REQUESTS = 10 // Bing server-side limit
+	MaxRequests = 10 // Bing server-side limit
 )
 
 var (
@@ -345,7 +345,7 @@ func continueConversation(query string, formattedTime string) {
 	if next {
 		c.Close()
 
-		if requestCount == MAX_REQUESTS {
+		if requestCount == MaxRequests {
 			os.Exit(0)
 		}
 
