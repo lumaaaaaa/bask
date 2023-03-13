@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	MAX_REQUESTS = 6 // Bing server-side limit
+	MAX_REQUESTS = 10 // Bing server-side limit
 )
 
 var (
@@ -84,6 +84,7 @@ func createChat() (CreateResponse, error) {
 	case "Success":
 		return createResponse, nil
 	default:
+		fmt.Println(string(body))
 		return CreateResponse{}, errors.New("failed to create a new conversation")
 	}
 }
