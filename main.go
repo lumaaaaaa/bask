@@ -10,7 +10,7 @@ var (
 )
 
 func printHelp() {
-	fmt.Println("bAsk - bing chat for the CLI - version v0.1a")
+	fmt.Println("bAsk - bing chat for the CLI - version v0.2")
 	fmt.Println()
 	fmt.Println("Usage:")
 	fmt.Println("\tbask [args]")
