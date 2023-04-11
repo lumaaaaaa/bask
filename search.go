@@ -91,7 +91,7 @@ func createChat() (CreateResponse, error) {
 func search(query string) {
 	conversation, err := createChat()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Failed to create a conversation. Please update your cookie with \"bask -c [cookie]\"")
 	}
 
 	conversationId = conversation.ConversationID
